@@ -9,19 +9,18 @@ import java.util.List;
 
 public class Post {
     private String objectID;
-    private String title;
+    private String message;
     private String authorProfileUrl;
     private String authorId;
+    private String recipientId;
     private String authorName;
-    private List<String> tags = new ArrayList<>();
     private int timeStamp;
     public Post() {
-        tags = new ArrayList<>();
     }
 
     public Post(String id, String title, String authorProfileUrl, String authorId) {
         this.objectID = id;
-        this.title = title;
+        this.message = title;
         this.authorProfileUrl = authorProfileUrl;
         this.authorId = authorId;
     }
@@ -34,12 +33,12 @@ public class Post {
         this.objectID = id;
     }
 
-    public String getTitle() {
-        return title;
+    public String getMessage() {
+        return message;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public String getAuthorProfileUrl() {
@@ -58,14 +57,6 @@ public class Post {
         this.authorId = authorId;
     }
 
-    public List<String> getTags() {
-        return tags;
-    }
-
-    public void setTags(List<String> tags) {
-        this.tags = tags;
-    }
-
     public int getTimeStamp() {
         return timeStamp;
     }
@@ -76,6 +67,14 @@ public class Post {
 
     public String getAuthorName() {
         return authorName;
+    }
+
+    public String getRecipientId() {
+        return recipientId;
+    }
+
+    public void setRecipientId(String recipientId) {
+        this.recipientId = recipientId;
     }
 
     public void setAuthorName(String authorName) {
