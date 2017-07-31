@@ -1,0 +1,70 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:layout_margin="16dp"
+        app:cardElevation="4dp">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <android.support.v7.widget.AppCompatImageView
+                android:layout_width="match_parent"
+                android:scaleType="centerCrop"
+                android:foreground="#6000"
+                android:id="@+id/profile_background"
+                android:layout_height="match_parent"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <ProgressBar
+                    android:layout_width="match_parent"
+                    style="@style/Base.Widget.AppCompat.ProgressBar.Horizontal"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="16dp"
+                    android:id="@+id/progress_indicator"
+                    android:visibility="gone"
+                    android:indeterminate="true"
+                    android:layout_height="wrap_content"/>
+
+                <include layout="@layout/layout_user_profile_image"/>
+                <android.support.v7.widget.AppCompatTextView
+                    android:layout_width="match_parent"
+                    android:id="@+id/phone_number"
+                    android:textColor="#8fff"
+                    android:gravity="center"
+                    android:textAlignment="center"
+                    android:layout_height="wrap_content"/>
+
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="52dp"
+                    android:background="#1000" />
+
+                <android.support.v7.widget.AppCompatButton
+                    style="@style/Base.Widget.AppCompat.Button.Borderless"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableEnd="@drawable/ic_edit"
+                    android:fontFamily="sans-serif-condensed"
+                    android:padding="14dp"
+                    android:id="@+id/change_name"
+                    android:text="Enter your name"
+                    android:textAlignment="textStart"
+                    android:textAllCaps="false"
+                    android:textColor="#fff"
+                    android:textSize="16sp" />
+            </LinearLayout>
+        </FrameLayout>
+    </android.support.v7.widget.CardView>
+
+</FrameLayout>
