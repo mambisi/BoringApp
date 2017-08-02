@@ -58,6 +58,9 @@ public class UserPreferences implements IUserSettings{
         FirebaseDataReferences.getUserDatabaseReference()
                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                 .child("name").setValue(username);
+        FirebaseDataReferences.getUserDatabaseReference()
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child("id").setValue(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
         editor.commit();
         if (!isAccountActivated())

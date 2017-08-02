@@ -1,5 +1,6 @@
 package com.mazeworks.boringapp.layout;
 
+import android.Manifest;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -14,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
@@ -27,7 +29,11 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.gun0912.tedpermission.PermissionListener;
+import com.gun0912.tedpermission.TedPermission;
 import com.mazeworks.boringapp.R;
+import com.mazeworks.boringapp.R2;
+import com.mazeworks.boringapp.activity.ProfileSettingsActivity;
 import com.mazeworks.boringapp.util.Events;
 import com.mazeworks.boringapp.util.FirebaseDataReferences;
 import com.mazeworks.boringapp.util.ImageCompression;
@@ -40,6 +46,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Date;
 
 import butterknife.BindView;
@@ -57,19 +64,19 @@ public class ProfileHeaderFragment extends Fragment implements TedBottomPicker.O
     private TedBottomPicker tedBottomPicker;
 
 
-    @BindView(R.id.user_profile)
+    @BindView(R2.id.user_profile)
     CircleImageView mProfileImageView;
 
-    @BindView(R.id.profile_background)
+    @BindView(R2.id.profile_background)
     AppCompatImageView mProfileBackground;
 
-    @BindView(R.id.change_name)
+    @BindView(R2.id.change_name)
     AppCompatButton mNameBtn;
 
-    @BindView(R.id.progress_indicator)
+
     ProgressBar mBusyIndicator;
 
-    @BindView(R.id.phone_number)
+    @BindView(R2.id.phone_number)
     AppCompatTextView mPhoneNumber;
 
     String mPrevName = "";
@@ -98,9 +105,39 @@ public class ProfileHeaderFragment extends Fragment implements TedBottomPicker.O
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile_header, container, false);
         ButterKnife.bind(this, view);
-
-        tedBottomPicker = new TedBottomPicker.Builder(getContext()).setOnImageSelectedListener(this).create();
+        mBusyIndicator = (ProgressBar) view.findViewById(R.id.progress_indicator);
         mNameBtn.setText("Enter your name");
+
+        PermissionListener permissionlistener = new PermissionListener() {
+            @Override
+            public void onPermissionGranted() {
+                tedBottomPicker = new TedBottomPicker.Builder(getContext()).setOnImageSelectedListener(ProfileHeaderFragment.this).create();
+            }
+
+            @Override
+            public void onPermissionDenied(ArrayList<String> deniedPermissions) {
+                if (getView() != null)
+                Snackbar.make(getView(),"Permission Denied\n" + deniedPermissions.toString(), Snackbar.LENGTH_SHORT).show();
+            }
+
+
+        };
+
+
+        new TedPermission(getContext())
+                .setPermissionListener(permissionlistener)
+                .setDeniedMessage("If you reject permission,you can not use this service\n\nPlease turn on permissions at [Setting] > [Permission]")
+                .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .check();
+
+
+
+
+
+
+
+
+
         if (userUtil.getUsername() != null) {
             mPrevName = userUtil.getUsername();
             mNameBtn.setText(mPrevName);
@@ -160,8 +197,10 @@ public class ProfileHeaderFragment extends Fragment implements TedBottomPicker.O
 
     @OnClick(R.id.profile_image_picker)
     void changeProfileImage() {
-        if(!tedBottomPicker.isAdded())
-        tedBottomPicker.show(getFragmentManager());
+        if (tedBottomPicker != null) {
+            if (!tedBottomPicker.isAdded())
+                tedBottomPicker.show(getFragmentManager());
+        }
     }
 
     private void updateUsername(final String name) {
@@ -251,7 +290,7 @@ public class ProfileHeaderFragment extends Fragment implements TedBottomPicker.O
 
     @Override
     public void compresionStarted() {
-        mBusyIndicator.setVisibility(View.VISIBLE);
+        this.mBusyIndicator.setVisibility(View.VISIBLE);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

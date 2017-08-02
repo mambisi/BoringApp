@@ -1,19 +1,27 @@
 package com.mazeworks.boringapp.layout;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.mazeworks.boringapp.R;
+import com.mazeworks.boringapp.adapter.UserSearchAdapter;
+import com.mazeworks.boringapp.entities.User;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class SearchUsersFragment extends Fragment {
 
-    private OnFragmentInteractionListener mListener;
-
+@BindView(R.id.users_list)
+    RecyclerView usersList;
     public SearchUsersFragment() {
         // Required empty public constructor
     }
@@ -35,35 +43,17 @@ public class SearchUsersFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_search_users, container, false);
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+        View v =  inflater.inflate(R.layout.fragment_search_users, container, false);
+        ButterKnife.bind(this,v);
+        return v;
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        Query query = FirebaseDatabase.getInstance().getReference("users");
+        UserSearchAdapter adapter = new UserSearchAdapter(getContext(),query,User.class);
+        usersList.setAdapter(adapter);
+        usersList.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 }

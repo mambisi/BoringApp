@@ -14,7 +14,7 @@ public class Post {
     private String authorId;
     private String recipientId;
     private String authorName;
-    private int timeStamp;
+    private long timeStamp;
     public Post() {
     }
 
@@ -57,11 +57,11 @@ public class Post {
         this.authorId = authorId;
     }
 
-    public int getTimeStamp() {
+    public long getTimeStamp() {
         return timeStamp;
     }
 
-    public void setTimeStamp(int timeStamp) {
+    public void setTimeStamp(long timeStamp) {
         this.timeStamp = timeStamp;
     }
 

@@ -1,5 +1,6 @@
 package com.mazeworks.boringapp.activity;
 
+import android.Manifest;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,10 +11,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
+import com.gun0912.tedpermission.PermissionListener;
+import com.gun0912.tedpermission.TedPermission;
 import com.mazeworks.boringapp.R;
 import com.mazeworks.boringapp.layout.ProfileHeaderFragment;
 import com.yalantis.ucrop.UCrop;
+
+import java.util.ArrayList;
 
 public class ProfileSettingsActivity extends AppCompatActivity {
     private ProfileHeaderFragment mProfileFragment;
@@ -22,6 +28,8 @@ public class ProfileSettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_settings);
         mProfileFragment = ProfileHeaderFragment.newInstance();
+
+
 
         AppCompatButton doneBtn = (AppCompatButton) findViewById(R.id.done_btn);
         FrameLayout frameLayout = (FrameLayout) findViewById(R.id.container);

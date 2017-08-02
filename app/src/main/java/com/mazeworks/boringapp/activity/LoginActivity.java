@@ -21,7 +21,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 import com.mazeworks.boringapp.R;
@@ -39,7 +41,7 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth.AuthStateListener mAuthListener;
     private ProgressDialog mProgressDialog;
     private static final int RC_SIGN_IN = 123;
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,6 +87,9 @@ public class LoginActivity extends AppCompatActivity {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 final FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
+                    String idToken = FirebaseInstanceId.getInstance().getToken();
+                    FirebaseDatabase.getInstance().getReference().child("notifications").child(user.getUid()).setValue(idToken);
+
                     FirebaseDataReferences.getUserDatabaseReference().child(user.getUid()).child("id").setValue(user.getUid());
                     FirebaseDataReferences.getUserDatabaseReference().child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
@@ -134,26 +139,7 @@ public class LoginActivity extends AppCompatActivity {
         };
 
 
-        PermissionListener permissionlistener = new PermissionListener() {
-            @Override
-            public void onPermissionGranted() {
-                Toast.makeText(LoginActivity.this, "Permission Granted", Toast.LENGTH_SHORT).show();
-            }
 
-            @Override
-            public void onPermissionDenied(ArrayList<String> deniedPermissions) {
-                Toast.makeText(LoginActivity.this, "Permission Denied\n" + deniedPermissions.toString(), Toast.LENGTH_SHORT).show();
-            }
-
-
-        };
-
-
-        new TedPermission(this)
-                .setPermissionListener(permissionlistener)
-                .setDeniedMessage("If you reject permission,you can not use this service\n\nPlease turn on permissions at [Setting] > [Permission]")
-                .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                .check();
     }
 
     private void updateUserSettings(User nUser) {
